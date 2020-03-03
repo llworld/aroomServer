@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aroominn.aroom.dao.InnDao">
+    <sql id="BASE_TABLE">
+    `stories`
+  </sql>
+
+    <sql id="BASE_COLUMN">
+    id,userId,times,content,likes,comment,repost
+  </sql>
+
+    <!--关注的所有人的故事-->
+    <!--isLike 是否点赞
+    isCollection 是否收藏-->
+    <select id="followStories" resultType="com.aroominn.aroom.entity.Stories">
+        select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
+         from (
+         SELECT Stories.*,`user`.nick,`user`.head
+         from stories,`user`,follow
+          WHERE `user`.Id=stories.userId and follow.userId=3 and follow.followId=`user`.Id) s
+         LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=3
+        LEFT JOIN collection ON  collection.storyId=s.id
+    </select>
+
+    <!--推荐故事-->
+    <!--已点赞 status 为1  未点赞为0或null-->
+    <select id="recommendStories" resultType="com.aroominn.aroom.entity.Stories">
+
+    select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
+ from (
+ SELECT Stories.*,`user`.nick,`user`.head
+ from stories,`user`
+  WHERE `user`.Id=stories.userId) s
+ LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
+LEFT JOIN collection ON  collection.storyId=s.id
+
+    </select>
+
+    <!--最新故事-->
+    <select id="latesStories" resultType="com.aroominn.aroom.entity.Stories">
+          select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
+ from (
+ SELECT Stories.*,`user`.nick,`user`.head
+ from stories,`user`
+  WHERE `user`.Id=stories.userId) s
+ LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
+LEFT JOIN collection ON  collection.storyId=s.id
+ORDER BY `s`.id DESC
+
+
+    </select>
+
+    <!--指定用户的所有故事-->
+    <select id="userStories" resultType="com.aroominn.aroom.entity.Stories">
+        select
+          stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+        from
+          `user`,stories
+        where
+          Stories.userId=#{userId}
+        ORDER BY id
+    </select>
+
+
+    <!--指定用户的所有故事-->
+<!--
+已更新
+    <select id="getStoriesByUserId" resultType="com.aroominn.aroom.entity.Stories">
+        select
+         Id,userId,times,content,images,`type`,ownerId
+        from
+          stories
+        where
+          Stories.userId=#{userId}
+        ORDER BY id
+    </select>
+-->
+
+
+
+
+    <!--指定用户的所有故事-->
+    <!--targetId  指定的用户的id-->
+    <!--userId 查询人的id-->
+    <select id="getStoriesByUserId" resultType="com.aroominn.aroom.entity.Stories">
+
+       select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
+       from (
+        SELECT Stories.*,`user`.nick,`user`.head
+        from stories,`user`
+        WHERE `user`.Id=stories.userId and stories.userId=#{targetId}) s
+      LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{userId}
+      LEFT JOIN collection ON  collection.storyId=s.id
+    </select>
+
+</mapper>

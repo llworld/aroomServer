@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aroominn.aroom.dao.StoriesDao">
+    <sql id="BASE_TABLE">
+    Stories
+  </sql>
+
+    <sql id="BASE_COLUMN">
+    id,userId,times,content,likes,comment,repost
+  </sql>
+
+    <select id="followStories" resultType="com.aroominn.aroom.entity.Stories">
+        SELECT Stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+        FROM Stories,`user`,follow
+        WHERE Stories.userId=`user`.Id AND `user`.Id in(
+          SELECT followId
+          from follow
+          WHERE follow.userId=#{Id}
+          )
+    </select>
+
+<!--    <select id="recommendStories" resultType="com.aroominn.aroom.entity.Stories">
+        select
+          Stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+        from
+          `user`,Stories
+        where
+          `user`.id=Stories.userId
+    </select>-->
+
+    <!--已点赞 status 为1  未点赞为0或null-->
+    <select id="recommendStories" resultType="com.aroominn.aroom.entity.Stories">
+        select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike
+        from (
+          SELECT Stories.*,`user`.nick,`user`.head
+          from stories,`user`
+          WHERE `user`.Id=stories.userId) s
+        LEFT JOIN likes ON s.Id=likes.storyId and likes.userId={id}
+    </select>
+
+
+    <select id="latesStories" resultType="com.aroominn.aroom.entity.Stories">
+        select
+          Stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+        from
+          `user`,Stories
+        where
+          `user`.id=Stories.userId
+        ORDER BY #{id}
+    </select>
+
+    <insert id="brewingStory">
+        insert into stories
+        (stories.userId,stories.times,stories.content,images)
+        values
+         (#{userId},#{times},#{content},#{images})
+    </insert>
+
+    <insert id="commentStories" parameterType="com.aroominn.aroom.entity.Comment">
+        insert into comment
+        (storyId,content,times,from_uid,to_uid,`type`,head,nick)
+        values
+        (#{storyId},#{content},#{times},#{from_uid},#{to_uid},#{type},#{head},#{nick})
+    </insert>
+
+    <select id="getComment" resultType="com.aroominn.aroom.entity.Comment">
+        select *
+        from comment
+        where storyId=#{storyId}
+    </select>
+
+    <!--点赞-->
+    <insert id="likeStories" parameterType="com.aroominn.aroom.entity.Like">
+        insert into `like`
+        (storyId,ownerId,userId,status)
+        values
+        (#{storyId},#{ownerId},#{userId},#{status})
+    </insert>
+
+</mapper>

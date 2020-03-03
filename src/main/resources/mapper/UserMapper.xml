@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aroominn.aroom.dao.UserDao">
+    <sql id="BASE_TABLE">
+    `user`
+  </sql>
+
+    <sql id="BASE_COLUMN">
+    id,nick,password,phone,email,tag,sex,age,head,category,token,deviceId
+  </sql>
+    <sql id="UPDATE_COLUMN">
+    nick,password,phone,email,tag,sex,age,head,category,token,deviceId
+  </sql>
+
+    <!--注册用户-->
+    <insert id="insert" parameterType="com.aroominn.aroom.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            phone,
+            <if test="token != null">
+                token,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            #{phone, jdbcType=VARCHAR},
+            <if test="token != null">
+                #{token, jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!--通过手机号查询用户-->
+    <select id="selectByPhone" resultType="com.aroominn.aroom.entity.User"
+            parameterType="com.aroominn.aroom.entity.User">
+        select *
+        from
+        <include refid="BASE_TABLE"/>
+        where phone=#{phone}
+    </select>
+
+    <!--通过token查询用户-->
+    <select id="selectByToken" resultType="com.aroominn.aroom.entity.User"
+            parameterType="com.aroominn.aroom.entity.User">
+        select *
+        from
+        <include refid="BASE_TABLE"/>
+        where token=#{token}
+    </select>
+
+    <!--通过手机号查询用户-->
+    <select id="selectLogin" resultType="com.aroominn.aroom.entity.User" parameterType="map">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        from
+        <include refid="BASE_TABLE"/>
+        where
+        phone=#{phone}
+    </select>
+
+
+    <!--通过id查询用户-->
+    <select id="getUserById" resultType="com.aroominn.aroom.entity.User" parameterType="map">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        from
+        <include refid="BASE_TABLE"/>
+        where
+        Id=#{Id}
+    </select>
+
+    <!--更新用户信息-->
+    <update id="updateUser" parameterType="com.aroominn.aroom.entity.User">
+        update
+        <include refid="BASE_TABLE"/>
+        <trim prefix="set" suffixOverrides=",">
+            <if test="nick != null">nick=#{nick},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="phone != null">phone=#{phone},</if>
+            <if test="email != null">email=#{email},</if>
+            <if test="tag != null">tag=#{tag},</if>
+            <if test="sex != null">sex=#{sex},</if>
+            <if test="age != null">age=#{age},</if>
+            <if test="head != null">head=#{head},</if>
+            <if test="category != null">category=#{category},</if>
+            <if test="token != null">token=#{token},</if>
+            <if test="deviceId != null">deviceId=#{deviceId}</if>
+        </trim>
+        <trim prefix="where" suffixOverrides="or" >
+            <if test="token !=null">token=#{token} or </if>
+
+            <if test="Id !=null">Id=#{Id}</if>
+        </trim>
+
+    </update>
+
+
+    <!--关注-->
+    <insert id="followUser" parameterType="com.aroominn.aroom.entity.Follow">
+        insert into follow
+        (userId,followId,`time`,status)
+        values
+        (#{userId},#{followId},#{time},#{status})
+    </insert>
+
+
+    <insert id="report" parameterType="com.aroominn.aroom.entity.Report">
+        insert into report
+        (storyId,userId,reason,`type`)
+        values
+        (#{storyId},#{userId},#{reason},#{`type`}))
+    </insert>
+</mapper>
