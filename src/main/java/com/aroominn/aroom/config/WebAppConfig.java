@@ -26,7 +26,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
    @Override
     public void addInterceptors(InterceptorRegistry registry){
         // 可添加多个，这里选择拦截所有请求地址，进入后判断是否有加注解即可
-        registry.addInterceptor(appInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/**/login","/api/**/add","/api/im/**","/test");
+        registry.addInterceptor(appInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/**/login","/api/**/add","/api/jiguang/**","/test");
         super.addInterceptors(registry);
     }
 
@@ -38,7 +38,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //配置server虚拟路径，handler为jsp中访问的目录，locations为files相对应的本地路径
         registry.addResourceHandler("/resource/images/**")
-                .addResourceLocations("file:./../images/");
+                .addResourceLocations("file:./images/");
     }
 
 }

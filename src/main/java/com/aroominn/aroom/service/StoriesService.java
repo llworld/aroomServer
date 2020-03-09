@@ -30,9 +30,10 @@ public interface StoriesService {
     int operaCollect(Collections param);
 
     /*点赞*/
-    int likeTale(Like like);
     /*取消赞*/
-    int unLikeTale(Like like);
+    int likeTale(Like like);
+
+
 
     /*转发*/
     int operaRepost(JSONObject param);
@@ -60,4 +61,5 @@ public interface StoriesService {
      */
     int brewingStory(JSONObject param);
 
+    int destroyTale(JSONObject param);
 }

@@ -39,6 +39,7 @@ public class StoriesController {
 
     /**
      * 点赞 取消点赞
+     * (#{storyId},#{ownerId},#{userId},#{status})
      *
      * @param like
      * @return
@@ -51,21 +52,14 @@ public class StoriesController {
          * 0:点赞
          * 1:取消赞
          */
-        int result = 0;
-        int type = like.getStatus();
-        if (type == 0) {
-            result = service.likeTale(like);
-        } else if (type == 1) {
-            result = service.unLikeTale(like);
-        } else {
-            /*错误*/
-        }
-        if (result == 1) {
 
-            return type == 0 ? new RespEntity(LIKE, "like") : new RespEntity(UNLIKE, "unlike");
-        } else {
-            return new RespEntity(FAILED, "未知错误");
-        }
+        int type = like.getStatus();
+
+        service.likeTale(like);
+
+
+        return type == 1 ? new RespEntity(LIKE, "like") : new RespEntity(UNLIKE, "unlike");
+
     }
 
     /**
@@ -77,8 +71,8 @@ public class StoriesController {
     @ResponseBody
     @PostMapping(value = "/report")
     public RespEntity operationReport(@RequestBody Report report) {
-        int result = service.operaReport(report);
-        return new RespEntity(result == 1 ? SUCCESS : WARN);
+        service.operaReport(report);
+        return new RespEntity(SUCCESS, "举报成功");
     }
 
     /**
@@ -103,16 +97,19 @@ public class StoriesController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/collection")
+    @PostMapping(value = "/collect")
     public RespEntity collectTale(@RequestBody Collections collections) {
         //把收藏的故事ID添加到收藏列表
-        service.operaCollect(collections);
-        return null;
+        try {
+            service.operaCollect(collections);
+        } catch (Exception e) {
+            log.error("会有异常吗");
+        }
+        return new RespEntity(SUCCESS, "操作成功");
     }
 
 
     /**
-     * 查看故事详情
      * 请求评论列表
      *
      * @param param
@@ -139,6 +136,13 @@ public class StoriesController {
             service.commentTale(comment);
         }
         return new RespEntity(SUCCESS, "评论成功");
+    }
+
+    @PostMapping(value = "/destroy")
+    @ResponseBody
+    public RespEntity destroyTale(@RequestBody JSONObject param){
+        service.destroyTale(param);
+        return new RespEntity(SUCCESS,"删除成功");
     }
 
     @PostMapping(value = "/brewing")

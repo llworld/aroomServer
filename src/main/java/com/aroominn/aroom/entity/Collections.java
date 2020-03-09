@@ -9,7 +9,7 @@ public class Collections implements Serializable {
     /**故事ID*/
     int storyId;
     /**故事拥有人ID*/
-    int owenerId;
+    int ownerId;
     /**收藏人ID*/
     int userId;
     /**
@@ -18,6 +18,14 @@ public class Collections implements Serializable {
      * 1：收藏
      * */
     int enable;
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
 
     public int getId() {
         return id;
@@ -35,13 +43,7 @@ public class Collections implements Serializable {
         this.storyId = storyId;
     }
 
-    public int getOwenerId() {
-        return owenerId;
-    }
 
-    public void setOwenerId(int owenerId) {
-        this.owenerId = owenerId;
-    }
 
     public int getUserId() {
         return userId;

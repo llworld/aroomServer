@@ -5,6 +5,7 @@ import com.aroominn.aroom.entity.HomeInfo;
 import com.aroominn.aroom.entity.RespEntity;
 import com.aroominn.aroom.entity.User;
 import com.aroominn.aroom.service.InnService;
+import com.aroominn.aroom.service.UserService;
 import inter.UserAuthenticate;
 import inter.UserId;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +28,22 @@ public class HomePageController {
     @Autowired
     private InnService innService;
 
+    @Autowired
+    private UserService userService;
+
 
     @ResponseBody
     @PostMapping(value = "/userinfo")
     public RespEntity userInfo(@RequestBody JSONObject param) {
+        if (param.getIntValue("toId")==0){
+            //被查看的人的id不能为空
+        }
+        if (param.getIntValue("fromId")==0){
+            //查看人的id不能为空
+        }
 
-        HomeInfo info = new HomeInfo();
-        info.setFollow("33");
-        info.setHeadUrl("http://192.168.1.6/resource/images/DefaultHead/xiaoliu.jpg");
-        info.setName("这是我的名字");
+        HomeInfo info=userService.findHomeInfo(param);
+
         return new RespEntity(RespEntity.RespCode.SUCCESS, info);
     }
 

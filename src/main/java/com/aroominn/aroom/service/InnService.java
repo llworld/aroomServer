@@ -28,7 +28,10 @@ public interface InnService {
         PageInfo<Stories> findUserStories(JSONObject param);
 
         /*收藏的故事*/
-        PageInfo<Stories>findCollectStories(int pageNum, int pageSize,int id);
+        PageInfo<Stories>findCollectStories(JSONObject param);
+
+
+
 
 
         /**

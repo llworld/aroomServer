@@ -8,10 +8,13 @@ import com.aroominn.aroom.entity.RespEntity;
 import com.aroominn.aroom.entity.User;
 import com.aroominn.aroom.service.UserService;
 
+import com.aroominn.aroom.utils.Md5Util;
 import com.aroominn.aroom.utils.rongcloud.UserApi;
 import inter.UserAuthenticate;
 import inter.UserId;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -29,6 +35,7 @@ import static com.aroominn.aroom.entity.RespEntity.RespCode.FAILED;
 import static com.aroominn.aroom.entity.RespEntity.RespCode.REGISTERED;
 import static com.aroominn.aroom.entity.RespEntity.RespCode.SUCCESS;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "/api/user")
 public class UserController {
@@ -87,23 +94,33 @@ public class UserController {
          * 密码对比错误返回密码错误
          * （验证码登陆 未设置过密码时如何处理 前端提示设置密码）
          */
-        User user = userService.login(jsonParam.getString("userPhone"));
+        String phone = jsonParam.getString("phone");
+        String password = jsonParam.getString("password");
+        User user = userService.login(phone);
         if (user == null) {
             return new RespEntity(FAILED, "账号不存在");
         }
-        if (!jsonParam.getString("userPassword").equals(user.getPassword())) {
+        //未设置密码提示密码错误
+        if (TextUtils.isEmpty(user.getPassword())) {
             return new RespEntity(FAILED, "密码错误");
-        }
-        /*用户登录成功后获取token*/
+        } else {
+            Md5Util md5 = new Md5Util();
+            try {
+                if (md5.checkPassword(password, user.getPassword())) {
+                    return new RespEntity(SUCCESS, user);
+                } else {
+                    return new RespEntity(FAILED, "密码错误");
+                }
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
-        try {
-//            String token = UserApi.getInstance().getToken(user.getPhone() + "", user.getNick(), user.getHead());
-//            user.setToken(token);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        return new RespEntity(FAILED, "密码错误");
 
-        return new RespEntity(SUCCESS, user);
+//        return new RespEntity(SUCCESS, user);
     }
 
     /**
@@ -117,12 +134,23 @@ public class UserController {
             user.setId(uId);
         }
 
-       int id= userService.updateUser(user);
+        if (!TextUtils.isEmpty(user.getPassword())) {
+            Md5Util md5 = new Md5Util();
+            try {
+                user.setPassword(md5.EncoderByMd5(user.getPassword()));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
 
-        User u=userService.getUserById(uId);
+        int id = userService.updateUser(user);
+
+        User u = userService.getUserById(uId);
 
 
-        return new RespEntity(SUCCESS,u);
+        return new RespEntity(SUCCESS, u);
     }
 
     /**
@@ -136,8 +164,16 @@ public class UserController {
 
     public RespEntity followUser(@RequestBody Follow follow) {
 
-        follow.setTime(new Date());
-        int res = userService.followUser(follow);
+        follow.setTimes(new Date().toLocaleString());
+        int res;
+        try {
+
+            res = userService.followUser(follow);
+        } catch (Exception e) {
+            log.error(e.getClass().getName() + "这是什么异常");
+            return new RespEntity(FAILED, "未知错误");
+        }
+
         return res == 1 ? new RespEntity(SUCCESS, "关注成功") : new RespEntity(FAILED, "未知错误");
     }
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aroominn.aroom.dao.StoriesDao">
     <sql id="BASE_TABLE">
-    Stories
+    stories
   </sql>
 
     <sql id="BASE_COLUMN">
@@ -10,29 +10,29 @@
   </sql>
 
     <select id="followStories" resultType="com.aroominn.aroom.entity.Stories">
-        SELECT Stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
-        FROM Stories,`user`,follow
-        WHERE Stories.userId=`user`.Id AND `user`.Id in(
+        SELECT stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+        FROM stories,`user`,follow
+        WHERE stories.userId=`user`.Id AND `user`.Id in(
           SELECT followId
           from follow
           WHERE follow.userId=#{Id}
           )
     </select>
 
-<!--    <select id="recommendStories" resultType="com.aroominn.aroom.entity.Stories">
-        select
-          Stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
-        from
-          `user`,Stories
-        where
-          `user`.id=Stories.userId
-    </select>-->
+    <!--    <select id="recommendstories" resultType="com.aroominn.aroom.entity.stories">
+            select
+              stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+            from
+              `user`,stories
+            where
+              `user`.id=stories.userId
+        </select>-->
 
     <!--已点赞 status 为1  未点赞为0或null-->
     <select id="recommendStories" resultType="com.aroominn.aroom.entity.Stories">
         select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike
         from (
-          SELECT Stories.*,`user`.nick,`user`.head
+          SELECT stories.*,`user`.nick,`user`.head
           from stories,`user`
           WHERE `user`.Id=stories.userId) s
         LEFT JOIN likes ON s.Id=likes.storyId and likes.userId={id}
@@ -41,11 +41,11 @@
 
     <select id="latesStories" resultType="com.aroominn.aroom.entity.Stories">
         select
-          Stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
+          stories.*,`user`.nick,`user`.head,`user`.phone,`user`.category
         from
-          `user`,Stories
+          `user`,stories
         where
-          `user`.id=Stories.userId
+          `user`.id=stories.userId
         ORDER BY #{id}
     </select>
 
@@ -69,12 +69,45 @@
         where storyId=#{storyId}
     </select>
 
-    <!--点赞-->
+    <!--点赞  有则修改 无则插入  /*取消赞*/-->
     <insert id="likeStories" parameterType="com.aroominn.aroom.entity.Like">
-        insert into `like`
-        (storyId,ownerId,userId,status)
-        values
-        (#{storyId},#{ownerId},#{userId},#{status})
+    INSERT INTO `likes`(`storyId`, `ownerId`,userId,likes.`status`)
+    VALUES(#{storyId},#{ownerId},#{userId},#{status})
+      ON  DUPLICATE KEY
+      UPDATE likes.`status`=#{status};
     </insert>
 
+
+    <insert id="reportStories" parameterType="com.aroominn.aroom.entity.Report">
+        insert into report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storyId != null">
+                storyId,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            reason,`type`
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storyId != null">
+                #{storyId},
+            </if>
+            <if test="userId != null">#{userId},</if>
+            #{reason},#{type}
+        </trim>
+    </insert>
+
+    <insert id="collect" parameterType="com.aroominn.aroom.entity.Collections">
+           INSERT INTO `collection` (`storyId`, `ownerId`,userId,enable)
+            VALUES(#{storyId},#{ownerId},#{userId},#{enable})
+            ON  DUPLICATE KEY
+            UPDATE enable=#{enable};
+    </insert>
+
+
+    <delete id="deleteTale" parameterType="map">
+        delete  from stories where Id=#{id}
+    </delete>
 </mapper>

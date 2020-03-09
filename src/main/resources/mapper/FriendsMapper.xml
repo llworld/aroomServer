@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aroominn.aroom.dao.FriendsDao">
+
+    <!--查询小二 关注我的人 我没关注他-->
+    <select id="findXiaoer" resultType="com.aroominn.aroom.entity.Friends">
+      select `user`.Id,`user`.nick,`user`.head
+        from `user`,follow
+        where follow.followId=#{userId} and follow.userId=`user`.Id and follow.userId not in
+        (select follow.followId
+        from follow
+        where  follow.userId=#{userId})
+        GROUP BY `user`.Id
+    </select>
+
+    <!--查询伙伴 互相关注的人 #{userId}和targetId相同 我的id-->
+    <select id="findPartner" resultType="com.aroominn.aroom.entity.Friends">
+        select `user`.Id,`user`.nick,`user`.head
+        from follow,`user`
+        where follow.userId=#{userId} and followId=`user`.Id and follow.followId in
+        (select follow.userId
+        from follow
+        where follow.followId=#{userId})
+
+    </select>
+
+    <!--查询掌柜的 我关注的人 但是他没有关注我-->
+    <select id="findPublican" resultType="com.aroominn.aroom.entity.Friends">
+       select `user`.Id,`user`.nick,`user`.head
+        from `user`,follow
+        where follow.followId=`user`.Id and follow.userId=#{userId} and followId not in
+        (select follow.userId
+        from follow
+        where  follow.followId=#{userId})
+		GROUP BY `user`.Id
+
+    </select>
+
+    <select id="findFriendInfo" resultType="com.aroominn.aroom.entity.User">
+
+          select `user`.Id,`user`.nick,`user`.head
+          from `user`
+          where  `user`.Id=#{id}
+
+    </select>
+
+
+</mapper>

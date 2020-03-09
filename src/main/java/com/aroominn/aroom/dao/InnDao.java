@@ -3,6 +3,7 @@ package com.aroominn.aroom.dao;
 
 import com.alibaba.fastjson.JSONObject;
 import com.aroominn.aroom.entity.Stories;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface InnDao {
 
     /*收藏的故事*/
     List<Stories> findCollectStories(JSONObject param);
+
+
 }

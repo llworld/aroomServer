@@ -1,6 +1,6 @@
 ## 服务器端口号
 server:
-  port: 80
+  port: 8080
   address: 0.0.0.0
 
 ## 关于数据库参数的相关配置
@@ -17,7 +17,8 @@ spring:
       #基本属性
       url: jdbc:mysql://127.0.0.1:3306/aroom?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
       username: root
-      password: 527521
+      password: Aroom2020.
+#      password: 527521
       #      url: jdbc:mysql://127.0.0.1:3306/aroom?
       #配置初始化大小/最小/最大
       initial-size: 1

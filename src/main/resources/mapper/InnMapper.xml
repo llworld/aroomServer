@@ -15,7 +15,7 @@
     <select id="followStories" resultType="com.aroominn.aroom.entity.Stories">
         select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
          from (
-         SELECT Stories.*,`user`.nick,`user`.head
+         SELECT stories.*,`user`.nick,`user`.head
          from stories,`user`,follow
           WHERE `user`.Id=stories.userId and follow.userId=3 and follow.followId=`user`.Id) s
          LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=3
@@ -28,7 +28,7 @@
 
     select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
  from (
- SELECT Stories.*,`user`.nick,`user`.head
+ SELECT stories.*,`user`.nick,`user`.head
  from stories,`user`
   WHERE `user`.Id=stories.userId) s
  LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
@@ -39,13 +39,13 @@ LEFT JOIN collection ON  collection.storyId=s.id
     <!--最新故事-->
     <select id="latesStories" resultType="com.aroominn.aroom.entity.Stories">
           select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
- from (
- SELECT Stories.*,`user`.nick,`user`.head
- from stories,`user`
-  WHERE `user`.Id=stories.userId) s
- LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
-LEFT JOIN collection ON  collection.storyId=s.id
-ORDER BY `s`.id DESC
+            from (
+            SELECT stories.*,`user`.nick,`user`.head
+            from stories,`user`
+            WHERE `user`.Id=stories.userId) s
+            LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
+            LEFT JOIN collection ON  collection.storyId=s.id
+            ORDER BY `s`.id DESC
 
 
     </select>
@@ -57,40 +57,48 @@ ORDER BY `s`.id DESC
         from
           `user`,stories
         where
-          Stories.userId=#{userId}
+          stories.userId=#{userId}
         ORDER BY id
     </select>
 
 
     <!--指定用户的所有故事-->
-<!--
-已更新
-    <select id="getStoriesByUserId" resultType="com.aroominn.aroom.entity.Stories">
-        select
-         Id,userId,times,content,images,`type`,ownerId
-        from
-          stories
-        where
-          Stories.userId=#{userId}
-        ORDER BY id
-    </select>
--->
-
-
+    <!--
+    已更新
+        <select id="getStoriesByUserId" resultType="com.aroominn.aroom.entity.Stories">
+            select
+             Id,userId,times,content,images,`type`,ownerId
+            from
+              stories
+            where
+              Stories.userId=#{userId}
+            ORDER BY id
+        </select>
+    -->
 
 
     <!--指定用户的所有故事-->
     <!--targetId  指定的用户的id-->
     <!--userId 查询人的id-->
+    <!--userId 查询targetId的故事-->
     <select id="getStoriesByUserId" resultType="com.aroominn.aroom.entity.Stories">
 
        select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
        from (
-        SELECT Stories.*,`user`.nick,`user`.head
+        SELECT stories.*,`user`.nick,`user`.head
         from stories,`user`
         WHERE `user`.Id=stories.userId and stories.userId=#{targetId}) s
       LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{userId}
       LEFT JOIN collection ON  collection.storyId=s.id
+    </select>
+
+    <!--用户收藏的故事-->
+    <select id="findCollectStories" resultType="com.aroominn.aroom.entity.Stories">
+
+        select stories.*,`user`.head
+        from stories,`user`
+        where `user`.id=stories.userId and stories.Id in (select storyId from collection where userId=#{userId})
+
     </select>
 
 </mapper>

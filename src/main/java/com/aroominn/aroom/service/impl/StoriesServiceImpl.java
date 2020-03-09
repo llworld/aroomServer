@@ -26,20 +26,16 @@ public class StoriesServiceImpl implements StoriesService {
     //收藏故事
     @Override
     public int operaCollect(Collections param) {
-        return 0;
+        return StoriesDao.collect(param);
     }
 
     //点赞
     @Override
     public int likeTale(Like like) {
-        StoriesDao.likeStories(like);
-        return 0;
+        int res = StoriesDao.likeStories(like);
+        return res;
     }
 
-    @Override
-    public int unLikeTale(Like like) {
-        return 0;
-    }
 
     //转发
     @Override
@@ -50,7 +46,8 @@ public class StoriesServiceImpl implements StoriesService {
     //举报
     @Override
     public int operaReport(Report param) {
-        return 0;
+
+        return StoriesDao.reportStories(param);
     }
 
     //评论
@@ -73,5 +70,10 @@ public class StoriesServiceImpl implements StoriesService {
     public int brewingStory(JSONObject param) {
 
         return StoriesDao.brewingStory(param);
+    }
+
+    @Override
+    public int destroyTale(JSONObject param) {
+        return StoriesDao.deleteTale(param);
     }
 }

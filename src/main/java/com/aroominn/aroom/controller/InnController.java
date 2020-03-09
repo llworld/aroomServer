@@ -26,12 +26,11 @@ public class InnController {
     private InnService innService;
 
 
-
     @ResponseBody
     @PostMapping(value = "/brewing")
-    public RespEntity brewingStories(@RequestBody JSONObject param){
+    public RespEntity brewingStories(@RequestBody JSONObject param) {
 
-        return new RespEntity(SUCCESS,"酝酿成功");
+        return new RespEntity(SUCCESS, "酝酿成功");
     }
 
     /**
@@ -39,6 +38,7 @@ public class InnController {
      * 0：关注人的故事
      * 1：推荐的故事
      * 2：最新故事
+     *
      * @param param
      * @return
      */
@@ -46,22 +46,22 @@ public class InnController {
     @ResponseBody
     @PostMapping(value = "/all")
     public RespEntity followStories(@RequestBody JSONObject param, @UserId Integer uId) {
-        System.out.println(uId+"-----------------------------------");      //请求用户的ID
+        System.out.println(uId + "-----------------------------------");      //请求用户的ID
         int type = param.getIntValue("type");
         int pageNum = param.getIntValue("pageNum");
         int pageSize = param.getIntValue("pageSize");
-        int userId=param.getIntValue("id");
-        User user=new User();
+        int userId = param.getIntValue("id");
+        User user = new User();
         user.setId(uId);
-        JSONObject jsonObject=new JSONObject();
-        jsonObject.put("id",uId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", uId);
         switch (type) {
             case 0:     //关注
-                return new RespEntity(SUCCESS, innService.findFollowStories(pageNum, pageSize,userId));
+                return new RespEntity(SUCCESS, innService.findFollowStories(pageNum, pageSize, userId));
             case 1:     //推荐
-                return new RespEntity(SUCCESS, innService.findRecommendStories(pageNum, pageSize,uId));
+                return new RespEntity(SUCCESS, innService.findRecommendStories(pageNum, pageSize, uId));
             case 2:     //最新
-                return new RespEntity(SUCCESS, innService.findLatesStories(pageNum, pageSize,jsonObject));
+                return new RespEntity(SUCCESS, innService.findLatesStories(pageNum, pageSize, jsonObject));
             case 3:     //指定人
                 return new RespEntity(SUCCESS, innService.findUserStories(param));
             default:
@@ -70,17 +70,28 @@ public class InnController {
     }
 
 
-
     /**
      * 用户所有故事
+     *
      * @param param userId
      * @return
      */
     @ResponseBody
     @PostMapping("/personalStories")
-    public RespEntity HiStoriesStories(@RequestBody JSONObject param){
-        PageInfo<Stories> personal= innService.findUserStories(param);
-        return new RespEntity(SUCCESS,personal);
+    public RespEntity HiStoriesStories(@RequestBody JSONObject param) {
+        PageInfo<Stories> personal = innService.findUserStories(param);
+        return new RespEntity(SUCCESS, personal);
+    }
+
+    /**
+     * 用户收藏的故事
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/personalCollect")
+    public RespEntity collectedStories(@RequestBody JSONObject param) {
+        PageInfo<Stories> personal = innService.findCollectStories(param);
+        return new RespEntity(SUCCESS, personal);
     }
 
 

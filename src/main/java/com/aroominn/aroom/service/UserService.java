@@ -1,7 +1,9 @@
 package com.aroominn.aroom.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.aroominn.aroom.entity.Follow;
+import com.aroominn.aroom.entity.HomeInfo;
 import com.aroominn.aroom.entity.Report;
 import com.aroominn.aroom.entity.User;
 import com.github.pagehelper.PageInfo;
@@ -31,4 +33,6 @@ public interface UserService {
     User getUserById(int id);
 
     int reportUser(Report report);
+
+    HomeInfo findHomeInfo(JSONObject object);
 }

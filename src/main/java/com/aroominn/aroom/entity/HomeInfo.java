@@ -7,6 +7,15 @@ public class HomeInfo implements Serializable {
     String name;
     String headUrl;
     String follow;
+    String isFollow;    //是否关注当前用户 自己id则是  空则否
+
+    public String getIsFollow() {
+        return isFollow;
+    }
+
+    public void setIsFollow(String isFollow) {
+        this.isFollow = isFollow;
+    }
 
     public String getName() {
         return name;

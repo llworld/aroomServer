@@ -8,10 +8,10 @@ import java.util.Date;
  */
 public class Follow implements Serializable {
     private int id;
-    private int userId;             //关注人
-    private int followId;           //被关注人
-    private Date time;            //关注时间
-    private int status;             //关注状态  0:关注(userId关注followId)   1:互为关注
+    private int userId;             //关注人 必填
+    private int followId;           //被关注人 必填
+    private String times;            //关注时间 非填
+    private int status;             //0为取关或为关注，1为关注  必填
 
     public int getId() {
         return id;
@@ -37,12 +37,12 @@ public class Follow implements Serializable {
         this.followId = followId;
     }
 
-    public Date getTime() {
-        return time;
+    public String getTimes() {
+        return times;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTimes(String times) {
+        this.times = times;
     }
 
     public int getStatus() {

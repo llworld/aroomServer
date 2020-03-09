@@ -20,7 +20,7 @@ public class RespEntity {
 
         SUCCESS(000, "请求成功"),
         LIKE(2001, "点赞成功"),
-        UNLIKE(2011, "点赞成功"),
+        UNLIKE(2011, "已取消赞"),
         REPORT(2002, "举报成功"),
         FOLLOW(2003, "关注成功"),
         BLACKLIST(2004, "拉黑成功"),

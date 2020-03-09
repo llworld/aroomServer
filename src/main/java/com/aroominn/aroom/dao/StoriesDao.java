@@ -1,10 +1,7 @@
 package com.aroominn.aroom.dao;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aroominn.aroom.entity.Comment;
-import com.aroominn.aroom.entity.Like;
-import com.aroominn.aroom.entity.Report;
-import com.aroominn.aroom.entity.Stories;
+import com.aroominn.aroom.entity.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +25,8 @@ public interface StoriesDao {
     /*发布故事*/
     int brewingStory(JSONObject param);
 
+    /*收藏故事*/
+    int collect(Collections param);
+
+    int deleteTale(JSONObject param);
 }

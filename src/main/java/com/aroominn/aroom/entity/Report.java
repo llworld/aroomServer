@@ -9,11 +9,28 @@ import java.io.Serializable;
  */
 public class Report implements Serializable {
     private int id;
-    private int StoriesId;            //故事id
+    private int storyId;            //故事id
     private int userId;             //用户id
-    private String Reason;          //举报原因
-    private int type;               //举报类型
+    private String reason;          //举报原因
+    private String type;               //举报类型
     private int fid;                //举报人id
+
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public int getStoryId() {
+        return storyId;
+    }
+
+    public void setStoryId(int storyId) {
+        this.storyId = storyId;
+    }
 
     public int getId() {
         return id;
@@ -23,13 +40,7 @@ public class Report implements Serializable {
         this.id = id;
     }
 
-    public int getStoriesId() {
-        return StoriesId;
-    }
 
-    public void setStoriesId(int storiesId) {
-        StoriesId = storiesId;
-    }
 
     public int getUserId() {
         return userId;
@@ -39,19 +50,12 @@ public class Report implements Serializable {
         this.userId = userId;
     }
 
-    public String getReason() {
-        return Reason;
-    }
 
-    public void setReason(String reason) {
-        Reason = reason;
-    }
-
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 

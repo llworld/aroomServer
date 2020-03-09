@@ -47,8 +47,7 @@
     </select>
 
     <!--通过token查询用户-->
-    <select id="selectByToken" resultType="com.aroominn.aroom.entity.User"
-            parameterType="com.aroominn.aroom.entity.User">
+    <select id="selectByToken" resultType="com.aroominn.aroom.entity.User" parameterType="com.aroominn.aroom.entity.User">
         select *
         from
         <include refid="BASE_TABLE"/>
@@ -105,9 +104,9 @@
     <!--关注-->
     <insert id="followUser" parameterType="com.aroominn.aroom.entity.Follow">
         insert into follow
-        (userId,followId,`time`,status)
+        (userId,followId,`times`,status)
         values
-        (#{userId},#{followId},#{time},#{status})
+        (#{userId},#{followId},#{times},#{status})
     </insert>
 
 
@@ -117,4 +116,17 @@
         values
         (#{storyId},#{userId},#{reason},#{`type`}))
     </insert>
+
+
+    <select id="findHomeInfo" parameterType="map" resultType="com.aroominn.aroom.entity.HomeInfo">
+        select nick name ,head headUrl,
+        (select count(id) from follow where followId=#{toId}) as follow,
+        (select userId from follow where followId=#{toId} and userId=#{fromId}) isFollow
+        from user
+        where id=#{toId}
+    </select>
+
+        <!--/*select nick name ,head headUrl,(select count(id) from follow where followId=#{id}) as follow
+        from user
+        where id=#{id}*/-->
 </mapper>

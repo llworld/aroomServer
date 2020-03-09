@@ -1,7 +1,9 @@
 package com.aroominn.aroom.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aroominn.aroom.dao.UserDao;
 import com.aroominn.aroom.entity.Follow;
+import com.aroominn.aroom.entity.HomeInfo;
 import com.aroominn.aroom.entity.Report;
 import com.aroominn.aroom.entity.User;
 import com.aroominn.aroom.service.UserService;
@@ -80,6 +82,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public int reportUser(Report report) {
         return userDao.report(report);
+    }
+
+    @Override
+    public HomeInfo findHomeInfo(JSONObject param) {
+
+        return userDao.findHomeInfo(param);
     }
 
 

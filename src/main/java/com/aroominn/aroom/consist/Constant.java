@@ -24,8 +24,8 @@ public class Constant {
      * 融云secret
      */
     public static final String RC_SECRET = "poALZjYuEDr";
-    public static final String SERVER_URL = "http://192.168.1.100/";
-//    public static final String SERVER_URL="http://47.95.245.232/";
+//    public static final String SERVER_URL = "http://192.168.1.100/";
+    public static final String SERVER_URL="http://39.106.217.117:8080/";
 
     /**
      * 自定义api地址

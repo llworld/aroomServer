@@ -62,9 +62,16 @@ public class InnServiceImpl implements InnService {
     }
 
     @Override
-    public PageInfo<Stories> findCollectStories(int pageNum, int pageSize, int id) {
-        return null;
+    public PageInfo<Stories> findCollectStories(JSONObject param) {
+        int pageNum=param.getIntValue("pageNum");
+        int pageSize=param.getIntValue("pageSize");
+        PageHelper.startPage(pageNum, pageSize);
+        List<Stories> s = innDao.findCollectStories(param);
+        PageInfo result = new PageInfo(s);
+        return result;
     }
+
+
 
 
 }

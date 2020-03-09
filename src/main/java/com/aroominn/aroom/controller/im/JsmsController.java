@@ -103,7 +103,7 @@ public class JsmsController {
             UserModel userModel = new UserModel()
                     .setId(id + "")
                     .setName("aroom")
-                    .setPortrait("http://img4.imgtn.bdimg.com/it/u=3755383127,3709632435&fm=11&gp=0.jpg");
+                    .setPortrait("http://39.106.217.117/resource/images/DefaultHead/dazui.jpg");
             TokenResult result = user.register(userModel);
             if (result.getCode() != 200) {
                 log.error(result.getErrorMessage());
