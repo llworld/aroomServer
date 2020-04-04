@@ -20,25 +20,28 @@ public class FileUtils {
         return new FileUtils();
     }
 
-    public  JSONArray saveFiles(List<MultipartFile> files, String id) {
+    public JSONArray saveFiles(List<MultipartFile> files, String id) {
         MultipartFile file = null;
         BufferedOutputStream stream = null;
         JSONArray jsonArray = new JSONArray();
-        List<String> strings=new ArrayList<>();
+        List<String> strings = new ArrayList<>();
         for (int i = 0; i < files.size(); ++i) {
             file = files.get(i);
             if (!file.isEmpty()) {
                 try {
                     byte[] bytes = file.getBytes();
                     stream = new BufferedOutputStream(new FileOutputStream(
-                            new File("./../images/" + id + file.getOriginalFilename())));//存在项目根目录下
+                            /*阿里环境为当前目录*/
+                            new File("./images/" + id + file.getOriginalFilename())));//存在项目根目录下
+//                            new File("./../images/" + id + file.getOriginalFilename())));//存在项目根目录下
                     stream.write(bytes);
                     stream.close();
                     JSONObject jsonObject = new JSONObject();
-                    jsonArray.add( SERVER_URL + "resource/images/"+ id + file.getOriginalFilename());
-                    strings.add( SERVER_URL + "resource/images/"+ id + file.getOriginalFilename());
+                    jsonArray.add(SERVER_URL + "resource/images/" + id + file.getOriginalFilename());
+                    strings.add(SERVER_URL + "resource/images/" + id + file.getOriginalFilename());
 //                    jsonArray.add(jsonObject);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     stream = null;
                     return null;
                 }

@@ -94,6 +94,7 @@ public class JsmsController {
             //不存在  添加新用户
             com.aroominn.aroom.entity.User newUser = new com.aroominn.aroom.entity.User();
             newUser.setPhone(phone);
+            newUser.setHead("http://39.106.217.117:8080/resource/images/DefaultHead/dazui.jpg");
 //            newUser.setToken(result.getToken());
             int id = userService.addUser(newUser);
 
@@ -103,7 +104,7 @@ public class JsmsController {
             UserModel userModel = new UserModel()
                     .setId(id + "")
                     .setName("aroom")
-                    .setPortrait("http://39.106.217.117/resource/images/DefaultHead/dazui.jpg");
+                    .setPortrait("http://39.106.217.117:8080/resource/images/DefaultHead/dazui.jpg");
             TokenResult result = user.register(userModel);
             if (result.getCode() != 200) {
                 log.error(result.getErrorMessage());

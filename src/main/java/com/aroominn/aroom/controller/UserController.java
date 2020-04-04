@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -163,8 +164,10 @@ public class UserController {
     @PostMapping("/follow")
 
     public RespEntity followUser(@RequestBody Follow follow) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        follow.setTimes(new Date().toLocaleString());
+
+        follow.setTimes(sdf.format(new Date()));
         int res;
         try {
 

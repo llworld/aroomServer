@@ -18,6 +18,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.aroominn.aroom.entity.RespEntity.RespCode.*;
@@ -132,7 +133,9 @@ public class StoriesController {
     @PostMapping(value = "/comment")
     public RespEntity commentStories(@RequestBody Comment comment) {
         if (comment != null) {
-            comment.setTimes(new Date().toLocaleString());
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            comment.setTimes(sdf.format(new Date()));
             service.commentTale(comment);
         }
         return new RespEntity(SUCCESS, "评论成功");
@@ -145,24 +148,6 @@ public class StoriesController {
         return new RespEntity(SUCCESS,"删除成功");
     }
 
-    @PostMapping(value = "/brewing")
-    @ResponseBody
-    public RespEntity multiImport(@RequestParam("info") String info, @RequestParam(value = "pictures", required = false) CommonsMultipartFile[] pictures) {
-        String reportBean = info;
-        //文本内容
-        for (CommonsMultipartFile file : pictures) {
-//            FileItem imgName = file.getFileItem();
-            File localFile = new File("G:/" + file.getOriginalFilename());
-            try {
-                file.transferTo(localFile);
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new RespEntity(SUCCESS, "完工");
-    }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
@@ -175,7 +160,8 @@ public class StoriesController {
         JSONArray imgList = FileUtils.getInstance().saveFiles(files, id);
         JSONObject param = new JSONObject();
         param.put("userId", id);
-        param.put("times", new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        param.put("times", sdf.format(new Date()));
         param.put("content", content);
         param.put("images", imgList.toString());
         service.brewingStory(param);
