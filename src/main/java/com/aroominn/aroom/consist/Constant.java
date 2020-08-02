@@ -25,7 +25,7 @@ public class Constant {
      */
     public static final String RC_SECRET = "poALZjYuEDr";
 //    public static final String SERVER_URL = "http://192.168.1.100/";
-    public static final String SERVER_URL="http://39.106.217.117:8080/";
+    public static final String SERVER_URL="http://127.0.0.1:8080/";
 
     /**
      * 自定义api地址
