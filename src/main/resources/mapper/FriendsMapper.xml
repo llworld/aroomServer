@@ -33,7 +33,6 @@
         from follow
         where  follow.followId=#{userId})
 		GROUP BY `user`.Id
-
     </select>
 
     <select id="findFriendInfo" resultType="com.aroominn.aroom.entity.User">

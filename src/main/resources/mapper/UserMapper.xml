@@ -103,10 +103,11 @@
 
     <!--关注-->
     <insert id="followUser" parameterType="com.aroominn.aroom.entity.Follow">
-        insert into follow
-        (userId,followId,`times`,status)
+        INSERT INTO `follow`  (userId,followId,`times`,`status`)
         values
         (#{userId},#{followId},#{times},#{status})
+        ON  DUPLICATE KEY
+        UPDATE follow.`status`=#{status};
     </insert>
 
 

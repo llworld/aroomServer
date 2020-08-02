@@ -17,9 +17,10 @@
          from (
          SELECT stories.*,`user`.nick,`user`.head
          from stories,`user`,follow
-          WHERE `user`.Id=stories.userId and follow.userId=3 and follow.followId=`user`.Id) s
-         LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=3
+          WHERE `user`.Id=stories.userId and follow.userId=#{id} and follow.followId=`user`.Id) s
+         LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
         LEFT JOIN collection ON  collection.storyId=s.id
+         ORDER BY s.Id DESC
     </select>
 
     <!--推荐故事-->
@@ -27,12 +28,13 @@
     <select id="recommendStories" resultType="com.aroominn.aroom.entity.Stories">
 
     select s.Id,s.userId,s.times,s.content,s.images,s.type,s.nick,s.head,likes.`status` isLike,collection.`enable` isCollection
- from (
- SELECT stories.*,`user`.nick,`user`.head
- from stories,`user`
-  WHERE `user`.Id=stories.userId) s
- LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
-LEFT JOIN collection ON  collection.storyId=s.id
+    from (
+      SELECT stories.*,`user`.nick,`user`.head
+      from stories,`user`
+      WHERE `user`.Id=stories.userId) s
+    LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
+    LEFT JOIN collection ON  collection.storyId=s.id
+     ORDER BY s.Id DESC
 
     </select>
 
@@ -45,7 +47,7 @@ LEFT JOIN collection ON  collection.storyId=s.id
             WHERE `user`.Id=stories.userId) s
             LEFT JOIN likes ON s.Id=likes.storyId and likes.userId=#{id}
             LEFT JOIN collection ON  collection.storyId=s.id
-            ORDER BY `s`.id DESC
+            ORDER BY s.id DESC
 
 
     </select>

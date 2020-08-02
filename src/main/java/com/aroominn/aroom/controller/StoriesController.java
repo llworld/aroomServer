@@ -104,7 +104,7 @@ public class StoriesController {
         try {
             service.operaCollect(collections);
         } catch (Exception e) {
-            log.error("会有异常吗");
+//            log.error("会有异常吗");
         }
         return new RespEntity(SUCCESS, "操作成功");
     }
@@ -165,6 +165,6 @@ public class StoriesController {
         param.put("content", content);
         param.put("images", imgList.toString());
         service.brewingStory(param);
-        return new RespEntity(SUCCESS, "完工");
+        return new RespEntity(SUCCESS, "成功");
     }
 }

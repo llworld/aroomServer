@@ -57,7 +57,7 @@ public class InnController {
         jsonObject.put("id", uId);
         switch (type) {
             case 0:     //关注
-                return new RespEntity(SUCCESS, innService.findFollowStories(pageNum, pageSize, userId));
+                return new RespEntity(SUCCESS, innService.findFollowStories(pageNum, pageSize, uId));
             case 1:     //推荐
                 return new RespEntity(SUCCESS, innService.findRecommendStories(pageNum, pageSize, uId));
             case 2:     //最新
