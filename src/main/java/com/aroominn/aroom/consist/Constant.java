@@ -12,8 +12,8 @@ public class Constant {
      */
     public static final String APP_KEY = "0f944e2e1e90e984273cba71";
     public static final String MASTER_SECRET = "fe621b76ee77a6d02ee7e898";
-    public static final String ALI_AK = "LTAI4FryjBQmug9sMYRqXiBu";
-    public static final String ALI_SECRET = "Kag5mOaWjykAa784pztNGlmKcvV9rV";
+    public static final String ALI_AK = "阿里AK";
+    public static final String ALI_SECRET = "阿里Secret";
     public static final String TEMPLATECODE = "SMS_183762263";
 
     /**
